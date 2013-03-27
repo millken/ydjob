@@ -1,0 +1,24 @@
+<Config>
+	<Redis>
+		<Addr>127.0.0.1</Addr>
+		<Port>6378</Port>
+		<PoolSize>500</PoolSize>
+	</Redis>
+	<TickTime>3</TickTime>
+	<LoopTime>
+	  <Mail>3</Mail>
+	  <Mobile>3</Mobile>
+	  <Crawlkangle>300</Crawlkangle>
+	</LoopTime>
+	<Smtp>
+	 <Host>mailserver:25</Host>
+	 <Username>notice</Username>
+	 <Password>BtnzbelyqYWv8tvRFYzy</Password>
+	 <From>测试人员</From>
+	</Smtp>
+	<Beanstalk>
+	  <Server>192.168.3.104:11300</Server>
+	  <MailQueue>mailsend</MailQueue>
+	  <MobileQueue>mobilesend</MobileQueue>
+	</Beanstalk>
+</Config>
