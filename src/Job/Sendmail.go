@@ -6,6 +6,7 @@ import (
 	"Config"
 	"net/smtp"
 	"strings"
+	"encoding/base64"
 	"time"
 	"fmt"
 )
@@ -43,32 +44,34 @@ func (a *loginAuth) Next(fromServer []byte, more bool) ([]byte, error) {
 }
 
 func (j *Jobmail) Run() {
-    conn, err := lentil.Dial(Config.GetBeanstalk().Server)
-    if err != nil {
-        Utils.LogPanicErr(err)
-    }	
 	for {
 
 		Utils.LogInfo("Jobmail delay %d Second", Config.GetLoopTime().Mail)
 		time.Sleep(time.Second * Config.GetLoopTime().Mail)
-		if err != nil {
-			conn, err = lentil.Dial(Config.GetBeanstalk().Server)
-		}
-		if err == nil {
-		 	err = conn.Use(Config.GetBeanstalk().MailQueue)
-		}
+	    beanstalkd, err := lentil.Dial(Config.GetBeanstalk().Server)
+	    if err != nil {
+	        Utils.LogPanicErr(err)
+	    }else{
+	    	err = beanstalkd.Use(Config.GetBeanstalk().MailQueue)
+	    }
 	    if err != nil {
 	        Utils.LogPanicErr(err)
 	    }else{
 	    	for i := 0; i < 10; i++ {
-				job,err := conn.PeekReady()
+				job,err := beanstalkd.PeekReady()
 			    if err != nil {
-			        Utils.LogPanicErr(err)
+			        //Utils.LogPanicErr(err)
 			        break
 			    }else{
-			    	fmt.Printf("Job id %d , body: %s \n", job.Id, job.Body)
-					//SendMail("millken@test.cn", "test mail", "<b>"+ string(job.Body)+"</b>",  "html")	    	
-			    	conn.Delete(job.Id)
+			    	body := strings.SplitN(string(job.Body), "\t", 4)
+			    	if len(body) == 4 {
+			    		r,err := base64.StdEncoding.DecodeString(body[3])
+			    		if err == nil {
+			    			fmt.Printf("Job id: %d  \nmail to:%s \nsubject:%s\nbody: , %s", job.Id, body[0], body[1], string(r))
+			    			SendMail( body[0], body[1], string(r), body[2])
+			    		}    	
+			    	}					
+			    	beanstalkd.Delete(job.Id)
 			    }	    		
 	    	}			
 		}

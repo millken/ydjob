@@ -7,11 +7,11 @@
 	<TickTime>3</TickTime>
 	<LoopTime>
 	  <Mail>3</Mail>
-	  <Mobile>3</Mobile>
+	  <Sms>1</Sms>
 	  <Crawlkangle>300</Crawlkangle>
 	</LoopTime>
 	<Smtp>
-	 <Host>mailserver:25</Host>
+	 <Host></Host>
 	 <Username>notice</Username>
 	 <Password>BtnzbelyqYWv8tvRFYzy</Password>
 	 <From>测试人员</From>
@@ -19,6 +19,9 @@
 	<Beanstalk>
 	  <Server>192.168.3.104:11300</Server>
 	  <MailQueue>mailsend</MailQueue>
-	  <MobileQueue>mobilesend</MobileQueue>
+	  <MobileQueue>smssend</MobileQueue>
 	</Beanstalk>
+	<Url>
+	  <SmsApi></SmsApi>
+	</Url>
 </Config>

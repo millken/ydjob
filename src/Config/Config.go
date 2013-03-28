@@ -14,7 +14,7 @@ type redisConfig struct {
 	PoolSize   int
 }
 type loopTime struct {
-	Mail, Mobile, Crawlkangle time.Duration
+	Mail, Sms, Crawlkangle time.Duration
 }
 
 type smtpConfig struct {
@@ -25,13 +25,17 @@ type beanstalkConfig struct {
 	Server, MailQueue, MobileQueue string
 }
 
+type urlConfig struct {
+	SmsApi, KangleIp string
+}
+
 type VsConfig struct {
 	XMLName    xml.Name `xml:"Config"`
 	Redis      redisConfig
 	Smtp       smtpConfig
-	TickTime time.Duration
 	LoopTime  loopTime
 	Beanstalk   beanstalkConfig	
+	Url         urlConfig
 }
 
 var vsConfig VsConfig
@@ -90,6 +94,9 @@ func  GetBeanstalk() beanstalkConfig {
 	return vsConfig.Beanstalk
 }
 
-func GetTickTime()time.Duration{
-	return vsConfig.TickTime
+/*
+ * url 
+ */
+func  GetUrl() urlConfig {
+	return vsConfig.Url
 }
