@@ -1,2 +1,7 @@
+#!/bin/sh
+#go get -v
 export GOPATH=$(cd "$(dirname "$0")"; pwd)
-go build  -ldflags "-s"
+REVISION=`git rev-parse --short=5 HEAD`
+echo $REVISION > REVISION
+go build -ldflags "-s -X main.gitVersion $REVISION" -v
+go install
