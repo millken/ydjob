@@ -49,6 +49,6 @@ func LogErr(errCode interface{}) error {
 
 }
 func LogPanicErr(err interface{}) {
-	LogInfo("panic=%s\n",err)
+	LogInfo("\npanic=%s\n",err)
 }
 
