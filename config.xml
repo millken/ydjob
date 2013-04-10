@@ -11,9 +11,9 @@
 	  <Crawlkangle>300</Crawlkangle>
 	</LoopTime>
 	<Smtp>
-	 <Host></Host>
-	 <Username>notice</Username>
-	 <Password>BtnzbelyqYWv8tvRFYzy</Password>
+	 <Host>email-smtp.us-east-1.amazonaws.com:465</Host>
+	 <Username>AKIAIJ4B2O7MNE65PB7A</Username>
+         <Password>Aq3kJ/P8spVl+Zls2MoHnAT1uADhoIlmMBcoQNrUIVEa</Password>
 	 <From>测试人员</From>
 	</Smtp>
 	<Beanstalk>
@@ -22,6 +22,7 @@
 	  <MobileQueue>smssend</MobileQueue>
 	</Beanstalk>
 	<Url>
-	  <SmsApi></SmsApi>
+	  <SmsApi>http://admin.esoftsms.com/sdk/Send.aspx?CorpID=BJZX01677&amp;Pwd=123456&amp;Mobile=%s&amp;Content=%s&amp;Cell=&amp;SendTime=</SmsApi>
+	  <MailApi>https://sendcloud.sohu.com/webapi/mail.send.xml?api_user=postmaster@yundun.sendcloud.org&amp;api_key=XaEjlKQe&amp;from=no-reply@yundun.cn&amp;fromname=云盾</MailApi>
 	</Url>
 </Config>

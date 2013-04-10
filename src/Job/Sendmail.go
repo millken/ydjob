@@ -5,7 +5,10 @@ import (
 	"Utils"
 	"Config"
 	"net/smtp"
+	"net/http"
 	"strings"
+	"io/ioutil"
+	"net/url"
 	"encoding/base64"
 	"time"
 	"fmt"
@@ -68,7 +71,8 @@ func (j *Jobmail) Run() {
 			    		r,err := base64.StdEncoding.DecodeString(body[3])
 			    		if err == nil {
 			    			fmt.Printf("Job id: %d  \nmail to:%s \nsubject:%s\nbody: , %s", job.Id, body[0], body[1], string(r))
-			    			SendMail( body[0], body[1], string(r), body[2])
+			    			//SendMail( body[0], body[1], string(r), body[2])
+			    			SendMailBySohu(body[0], body[1], string(r))
 			    		}    	
 			    	}					
 			    	beanstalkd.Delete(job.Id)
@@ -108,4 +112,20 @@ func SendMail(to, subject, body, mailtype string) {
             Utils.LogPanicErr(err)
     }	
 
+}
+
+//http://sendcloud.sohu.com
+func SendMailBySohu(to , subject, body string)(err error) {
+	resp, err := http.PostForm(Config.GetUrl().MailApi,
+		url.Values{"to": {to}, "subject": {subject}, "html": {body}})
+	if err != nil {
+		return  err
+	}
+	defer resp.Body.Close()
+	res, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		Utils.LogPanicErr(err)
+	}
+	Utils.LogInfo(string(res))
+	return  nil	
 }
