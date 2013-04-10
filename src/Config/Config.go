@@ -26,7 +26,7 @@ type beanstalkConfig struct {
 }
 
 type urlConfig struct {
-	SmsApi, KangleIp string
+	SmsApi, MailApi, KangleIp string
 }
 
 type VsConfig struct {
