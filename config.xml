@@ -1,0 +1,34 @@
+<Config>
+	<Redis>
+		<Addr>127.0.0.1</Addr>
+		<Port>6378</Port>
+		<PoolSize>500</PoolSize>
+	</Redis>
+	<TickTime>3</TickTime>
+	<LoopTime>
+	  <Mail>311</Mail>
+	  <Sms>111</Sms>
+	  <Crawlkangle>3</Crawlkangle>
+	  <Firewall>3</Firewall>
+	</LoopTime>
+	<Smtp>
+	 <Host>email-smtp.us-east-1.amazonaws.com:465</Host>
+	 <Username>AKIAIJ4B2O7MNE65PB7A</Username>
+         <Password>Aq3kJ/P8spVl+Zls2MoHnAT1uADhoIlmMBcoQNrUIVEa</Password>
+	 <From>测试人员</From>
+	</Smtp>
+	<Beanstalk>
+	  <Server>192.168.3.104:11300</Server>
+	  <MailQueue>mailsend</MailQueue>
+	  <MobileQueue>smssend</MobileQueue>
+	</Beanstalk>
+	<Url>
+	  <SmsApi>http://admin.esoftsms.com/sdk/Send.aspx?CorpID=BJZX01677&amp;Pwd=123456&amp;Mobile=%s&amp;Content=%s&amp;Cell=&amp;SendTime=</SmsApi>
+	  <MailApi>https://sendcloud.sohu.com/webapi/mail.send.xml?api_user=postmaster@yundun.sendcloud.org&amp;api_key=XaEjlKQe&amp;from=no-reply@yundun.cn&amp;fromname=云盾</MailApi>
+	  <HuzhouFW1>http://122.225.102.117:2008/cgi-bin/nlmsg.cgi?get_servip+115.238.236.0/24</HuzhouFW1>
+	  <HuzhouFW2>http://122.225.102.125:2008/cgi-bin/nlmsg.cgi?get_servip+61.153.107.0/24</HuzhouFW2>
+	</Url>
+	<Db>
+	  <HzFirewall>yd:123456@tcp(192.168.3.104:3306)/yundun_monitor?charset=utf8&amp;autocommit=true</HzFirewall>
+	</Db>
+</Config>

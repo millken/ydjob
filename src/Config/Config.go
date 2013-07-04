@@ -14,7 +14,7 @@ type redisConfig struct {
 	PoolSize   int
 }
 type loopTime struct {
-	Mail, Sms, Crawlkangle time.Duration
+	Mail, Sms, Crawlkangle, Firewall time.Duration
 }
 
 type smtpConfig struct {
@@ -26,7 +26,11 @@ type beanstalkConfig struct {
 }
 
 type urlConfig struct {
-	SmsApi, MailApi, KangleIp string
+	SmsApi, MailApi, KangleIp, HuzhouFW1, HuzhouFW2 string
+}
+
+type dbConfig struct {
+	HzFirewall string
 }
 
 type VsConfig struct {
@@ -36,6 +40,7 @@ type VsConfig struct {
 	LoopTime  loopTime
 	Beanstalk   beanstalkConfig	
 	Url         urlConfig
+	Db			dbConfig
 }
 
 var vsConfig VsConfig
@@ -99,4 +104,11 @@ func  GetBeanstalk() beanstalkConfig {
  */
 func  GetUrl() urlConfig {
 	return vsConfig.Url
+}
+
+/*
+ * db config
+ */
+func  GetDb() dbConfig {
+	return vsConfig.Db
 }
