@@ -57,7 +57,10 @@ func ParseData(data []count) {
 			in_othbps, _ := strconv.ParseFloat(wpothbps[0], 64)
 			arrRealtime = append(arrRealtime, fmt.Sprintf("('%s','%s','%s','%s','%s', '%s','%s','%s','%s','%s','%s', '%s', '%s','%s','%s','%s','%s','%s', '%s', '%s','%s','%s','%s','%s','%s', '%s', '%s','%s','%s','%s','%s','%s','%s')", v1.Sip, v1.WDConn,v1.WDTcpConn,v1.WDUdpConn,v1.WDOthConn,v1.WPTotBps,v1.WPTcpBps,v1.WPSynBps,v1.WPUdpBps,v1.WPIcmpBps,v1.WPOthBps,v1.WPFragBps,v1.DPTotBps,v1.DPTcpBps,v1.DPSynBps,v1.DPUdpBps,v1.DPIcmpBps,v1.DPOthBps,v1.DPFragBps,v1.WPTotPps,v1.WPTcpPps,v1.WPSynPps,v1.WPUdpPps,v1.WPIcmpPps,v1.WPOthPps,v1.WPFragPps,v1.DPTotPps,v1.DPTcpPps,v1.DPSynPps,v1.DPUdpPps,v1.DPIcmpPps,v1.DPOthPps,v1.DPFragPps))
 			arrRealtimeip = append(arrRealtimeip, fmt.Sprintf("'%s'", v1.Sip))
-			if true || in_totbps > 100 || in_tcpbps >50 || in_synbps > 10 || in_udpbps > 1 || in_icmpbps > 1 || in_othbps > 1 {
+			if strings.HasPrefix(v1.Sip, "61.") { //61开头的为大墙集群
+				in_totbps = in_totbps * 4
+			}
+			if false || in_totbps > 100 || in_tcpbps >100 || in_synbps > 100 || in_udpbps > 100 || in_icmpbps > 100 || in_othbps > 100 {
 				//fmt.Printf("in_totbps:%+v,in_tcpbps:%+v,in_synbps:%+v,in_udpbps:%+v,in_icmpbps:%+v =>db\n", in_totbps,in_tcpbps,in_synbps,in_udpbps,in_icmpbps)
 				arr = append(arr, fmt.Sprintf("('%s','%s','%s','%s','%s', '%s','%s','%s','%s','%s','%s', '%s', '%s','%s','%s','%s','%s','%s', '%s', '%s','%s','%s','%s','%s','%s', '%s', '%s','%s','%s','%s','%s','%s','%s')", v1.Sip, v1.WDConn,v1.WDTcpConn,v1.WDUdpConn,v1.WDOthConn,v1.WPTotBps,v1.WPTcpBps,v1.WPSynBps,v1.WPUdpBps,v1.WPIcmpBps,v1.WPOthBps,v1.WPFragBps,v1.DPTotBps,v1.DPTcpBps,v1.DPSynBps,v1.DPUdpBps,v1.DPIcmpBps,v1.DPOthBps,v1.DPFragBps,v1.WPTotPps,v1.WPTcpPps,v1.WPSynPps,v1.WPUdpPps,v1.WPIcmpPps,v1.WPOthPps,v1.WPFragPps,v1.DPTotPps,v1.DPTcpPps,v1.DPSynPps,v1.DPUdpPps,v1.DPIcmpPps,v1.DPOthPps,v1.DPFragPps))
 			}
