@@ -1,7 +1,7 @@
 package Job
 
 import (
-	"encoding/xml"
+	"encoding/json"
 	"Utils"
 	"Config"
 	"net/http"
@@ -17,14 +17,25 @@ import (
 type Firewall struct {
 }
 
-//XML结构
-type NlMsgDb struct {
-    Count []count `xml:"count"`
+type HuzhouColletion struct {
+	Pool []Huzhou
 }
 
-type count struct {
-    Sip string `xml:"sip"`
-    WDConn,WDTcpConn,WDUdpConn,WDOthConn,WPTotBps,WPTcpBps,WPSynBps,WPUdpBps,WPIcmpBps,WPOthBps,WPFragBps,DPTotBps,DPTcpBps,DPSynBps,DPUdpBps,DPIcmpBps,DPOthBps,DPFragBps,WPTotPps,WPTcpPps,WPSynPps,WPUdpPps,WPIcmpPps,WPOthPps,WPFragPps,DPTotPps,DPTcpPps,DPSynPps,DPUdpPps,DPIcmpPps,DPOthPps,DPFragPps string
+type Huzhou struct {
+	Ip string `json:"ip"`
+	Trafficin string `json:"trafficin"`
+	Trafficout string `json:"trafficout"`
+	Syn string `json:"syn"`
+	Udp string `json:"udp"`
+	Icmp string `json:"icmp"`
+	Other string `json:"other"`
+	//,'type',state,bypass,trafficin,trafficout,syn,udp,icmp,frag,other,dns,tcplinks,udplinks,tcpnew,udpnew string
+}
+
+func (hc *HuzhouColletion) FromJson(jsonStr string) error {
+    var data = &hc.Pool
+    b := []byte(jsonStr)
+    return json.Unmarshal(b, data)
 }
 
 func (f *Firewall) Run() {
@@ -38,31 +49,40 @@ func (f *Firewall) Run() {
 	}	
 }
 
-func ParseData(data []count) {
+func ParseData(data []Huzhou) {
 	arr := []string{}
 	arrRealtime := []string{}
 	arrRealtimeip := []string{}
 	for _, v1 := range data {
-			wptotbps := strings.Split(v1.WPTotBps, " / ");//>100M
-			wptcpbps := strings.Split(v1.WPTcpBps, " / "); //>50M
-			wpsynbps := strings.Split(v1.WPSynBps, " / "); //>10M
-			wpudpbps := strings.Split(v1.WPUdpBps, " / "); //>1M
-			wpicmpbps := strings.Split(v1.WPIcmpBps, " / "); //>1M
-			wpothbps := strings.Split(v1.WPOthBps, " / "); //>1M
-			in_totbps, _ := strconv.ParseFloat(wptotbps[0], 64)
-			in_tcpbps, _ := strconv.ParseFloat(wptcpbps[0], 64)
-			in_synbps, _ := strconv.ParseFloat(wpsynbps[0], 64)
-			in_udpbps, _ := strconv.ParseFloat(wpudpbps[0], 64)
-			in_icmpbps, _ := strconv.ParseFloat(wpicmpbps[0], 64)
-			in_othbps, _ := strconv.ParseFloat(wpothbps[0], 64)
-			arrRealtime = append(arrRealtime, fmt.Sprintf("('%s','%s','%s','%s','%s', '%s','%s','%s','%s','%s','%s', '%s', '%s','%s','%s','%s','%s','%s', '%s', '%s','%s','%s','%s','%s','%s', '%s', '%s','%s','%s','%s','%s','%s','%s')", v1.Sip, v1.WDConn,v1.WDTcpConn,v1.WDUdpConn,v1.WDOthConn,v1.WPTotBps,v1.WPTcpBps,v1.WPSynBps,v1.WPUdpBps,v1.WPIcmpBps,v1.WPOthBps,v1.WPFragBps,v1.DPTotBps,v1.DPTcpBps,v1.DPSynBps,v1.DPUdpBps,v1.DPIcmpBps,v1.DPOthBps,v1.DPFragBps,v1.WPTotPps,v1.WPTcpPps,v1.WPSynPps,v1.WPUdpPps,v1.WPIcmpPps,v1.WPOthPps,v1.WPFragPps,v1.DPTotPps,v1.DPTcpPps,v1.DPSynPps,v1.DPUdpPps,v1.DPIcmpPps,v1.DPOthPps,v1.DPFragPps))
-			arrRealtimeip = append(arrRealtimeip, fmt.Sprintf("'%s'", v1.Sip))
-			if strings.HasPrefix(v1.Sip, "61.") { //61开头的为大墙集群
-				in_totbps = in_totbps * 4
+			ip := v1.Ip;
+			trafficin := strings.Split(v1.Trafficin, " / ");//>100M
+			trafficout := strings.Split(v1.Trafficout, " / "); //>50M
+			syn := strings.Split(v1.Syn, " / "); //>10M
+			udp := strings.Split(v1.Udp, " / "); //>1M
+			icmp := strings.Split(v1.Icmp, " / "); //>1M
+			other := strings.Split(v1.Other, " / "); //>1M
+			trafficin_1, _ := strconv.ParseFloat(trafficin[0], 64)
+			trafficin_2, _ := strconv.ParseFloat(trafficin[1], 64)
+			trafficout_1, _ := strconv.ParseFloat(trafficout[0], 64)
+			trafficout_2, _ := strconv.ParseFloat(trafficout[1], 64)
+			syn_1, _ := strconv.ParseFloat(syn[0], 64)
+			syn_2, _ := strconv.ParseFloat(syn[1], 64)
+			udp_1, _ := strconv.ParseFloat(udp[0], 64)
+			udp_2, _ := strconv.ParseFloat(udp[1], 64)
+			icmp_1, _ := strconv.ParseFloat(icmp[0], 64)
+			icmp_2, _ := strconv.ParseFloat(icmp[1], 64)
+			other_1, _ := strconv.ParseFloat(other[0], 64)
+			other_2, _ := strconv.ParseFloat(other[1], 64)	
+			//fmt.Printf("%q,%q,%f,%f", v1.Trafficin,trafficin,trafficin_1,trafficin_2)																	
+			arrRealtime = append(arrRealtime, fmt.Sprintf("('%s','%f','%f','%f','%f', '%f','%f','%f','%f','%f','%f', '%f', '%f')", ip, trafficin_1,trafficin_2,trafficout_1,trafficout_2,syn_1,syn_2,udp_1,udp_2,icmp_1,icmp_2,other_1,other_2))
+			arrRealtimeip = append(arrRealtimeip, fmt.Sprintf("'%s'", ip))
+			if strings.HasPrefix(ip, "61.153.107") { //61开头的为大墙集群
+				//trafficin_1 = trafficin_1 * 4
 			}
-			if false || in_totbps > 100 || in_tcpbps >100 || in_synbps > 100 || in_udpbps > 100 || in_icmpbps > 100 || in_othbps > 100 {
-				//fmt.Printf("in_totbps:%+v,in_tcpbps:%+v,in_synbps:%+v,in_udpbps:%+v,in_icmpbps:%+v =>db\n", in_totbps,in_tcpbps,in_synbps,in_udpbps,in_icmpbps)
-				arr = append(arr, fmt.Sprintf("('%s','%s','%s','%s','%s', '%s','%s','%s','%s','%s','%s', '%s', '%s','%s','%s','%s','%s','%s', '%s', '%s','%s','%s','%s','%s','%s', '%s', '%s','%s','%s','%s','%s','%s','%s')", v1.Sip, v1.WDConn,v1.WDTcpConn,v1.WDUdpConn,v1.WDOthConn,v1.WPTotBps,v1.WPTcpBps,v1.WPSynBps,v1.WPUdpBps,v1.WPIcmpBps,v1.WPOthBps,v1.WPFragBps,v1.DPTotBps,v1.DPTcpBps,v1.DPSynBps,v1.DPUdpBps,v1.DPIcmpBps,v1.DPOthBps,v1.DPFragBps,v1.WPTotPps,v1.WPTcpPps,v1.WPSynPps,v1.WPUdpPps,v1.WPIcmpPps,v1.WPOthPps,v1.WPFragPps,v1.DPTotPps,v1.DPTcpPps,v1.DPSynPps,v1.DPUdpPps,v1.DPIcmpPps,v1.DPOthPps,v1.DPFragPps))
+			threshold,_ := strconv.ParseFloat("100", 64)
+			if false || trafficin_1 > threshold || syn_1 > threshold || udp_1 > threshold || icmp_1 > threshold || other_1 > threshold {
+				//fmt.Printf("trafficin_1:%f,trafficin_2:%f,trafficout_1:%f,trafficout_2:%f,syn_1:%f,syn_2:%f,udp_1:%f,udp_2:%f,icmp_1:%f,icmp_2:%f,other_1:%f,other_2:%f, =>db\n", trafficin_1, trafficin_2, trafficout_1, trafficout_2, syn_1, syn_2, udp_1, udp_2, icmp_1, icmp_2, other_1, other_2)
+				arr = append(arr, fmt.Sprintf("('%s','%f','%f','%f','%f', '%f','%f','%f','%f','%f','%f', '%f', '%f')", ip, trafficin_1,trafficin_2,trafficout_1,trafficout_2,syn_1,syn_2,udp_1,udp_2,icmp_1,icmp_2,other_1,other_2))
 			}
 	}
 	dbs, err := sql.Open("mysql", Config.GetDb().HzFirewall)
@@ -73,16 +93,16 @@ func ParseData(data []count) {
 	}
 	
 	if len(arrRealtime) > 0 {
-		sql := fmt.Sprintf("DELETE FROM `firewall_hz_realtime` WHERE sip in (%s)", strings.Join(arrRealtimeip, ","))
+		sql := fmt.Sprintf("DELETE FROM `huzhou_realtime` WHERE ip in (%s)", strings.Join(arrRealtimeip, ","))
 		dbs.Exec(sql)
-		sql = fmt.Sprintf("insert into `firewall_hz_realtime` (sip,wdconn,wdtcpconn,wdudpconn,wdothconn,wptotbps,wptcpbps,wpsynbps,wpudpbps,wpicmpbps,wpothbps,wpfragbps,dptotbps,dptcpbps,dpsynbps,dpudpbps,dpicmpbps,dpothbps,dpfragbps,wptotpps,wptcppps,wpsynpps,wpudppps,wpicmppps,wpothpps,wpfragpps,dptotpps,dptcppps,dpsynpps,dpudppps,dpicmppps,dpothpps,dpfragpps) values %s", strings.Join(arrRealtime, ","))
+		sql = fmt.Sprintf("insert into `huzhou_realtime` (ip,trafficin_1,trafficin_2,trafficout_1,trafficout_2,syn_1,syn_2,udp_1,udp_2,icmp_1,icmp_2,other_1,other_2) values %s", strings.Join(arrRealtime, ","))
 		_, err = dbs.Exec(sql)
 		if err != nil {
 			Utils.LogInfo("can't query :%v, sql:\n%q\n", err, sql)
 		}		 
 	}	
 	if len(arr) > 0 {
-		sql := fmt.Sprintf("insert into `firewall_hz` (sip,wdconn,wdtcpconn,wdudpconn,wdothconn,wptotbps,wptcpbps,wpsynbps,wpudpbps,wpicmpbps,wpothbps,wpfragbps,dptotbps,dptcpbps,dpsynbps,dpudpbps,dpicmpbps,dpothbps,dpfragbps,wptotpps,wptcppps,wpsynpps,wpudppps,wpicmppps,wpothpps,wpfragpps,dptotpps,dptcppps,dpsynpps,dpudppps,dpicmppps,dpothpps,dpfragpps) values %s", strings.Join(arr, ","))
+		sql := fmt.Sprintf("insert into `huzhou` (ip,trafficin_1,trafficin_2,trafficout_1,trafficout_2,syn_1,syn_2,udp_1,udp_2,icmp_1,icmp_2,other_1,other_2) values %s", strings.Join(arr, ","))
 		//fmt.Println(sql)
 		_, err = dbs.Exec(sql)
 		if err != nil {
@@ -92,7 +112,7 @@ func ParseData(data []count) {
 }
 
 func GetHuzhouFirewall(url string)(err error) {
-	f := NlMsgDb{}
+	f := HuzhouColletion{}.Pool
 	var myTransport http.RoundTripper = &http.Transport{
 		    Proxy:                 http.ProxyFromEnvironment,
 		    ResponseHeaderTimeout: time.Second * 3,
@@ -110,12 +130,13 @@ func GetHuzhouFirewall(url string)(err error) {
 	if err != nil {
 		Utils.LogInfo("Firewall fetch url %s => %s", url, err)
 	}else{
-		err = xml.Unmarshal(res, &f)
+		err = json.Unmarshal(res, &f)
 		if err != nil {
-			Utils.LogInfo("Parse xml: %v", err)
+			Utils.LogInfo("Parse json: %v", err)
 			return err
 		}
-		ParseData(f.Count)
+		//Utils.LogInfo("res:%s,json: %q", res,f)
+		ParseData(f)
 	}
 	return  nil
 }

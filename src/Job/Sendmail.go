@@ -63,7 +63,7 @@ func (j *Jobmail) Run() {
 	    	for i := 0; i < 10; i++ {
 				job,err := beanstalkd.PeekReady()
 			    if err != nil {
-			        //Utils.LogPanicErr(err)
+			        Utils.LogPanicErr(err)
 			        break
 			    }else{
 			    	body := strings.SplitN(string(job.Body), "\t", 4)
