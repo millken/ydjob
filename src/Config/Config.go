@@ -27,6 +27,11 @@ type beanstalkConfig struct {
 
 type urlConfig struct {
 	SmsApi, MailApi, KangleIp, HuzhouFW1, HuzhouFW2 string
+	AttackFireWall []string
+}
+
+type AttackFireWall struct {
+	Url string `xml:"AttackFireWall"`
 }
 
 type dbConfig struct {
