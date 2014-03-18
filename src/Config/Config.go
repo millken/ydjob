@@ -26,7 +26,7 @@ type beanstalkConfig struct {
 }
 
 type urlConfig struct {
-	SmsApi, MailApi, KangleIp, HuzhouFW1, HuzhouFW2 string
+	SmsApi, MailApi, KangleIp string
 	AttackFireWall []string
 }
 
@@ -35,7 +35,7 @@ type AttackFireWall struct {
 }
 
 type dbConfig struct {
-	HzFirewall string
+	Firewall string
 }
 
 type VsConfig struct {
